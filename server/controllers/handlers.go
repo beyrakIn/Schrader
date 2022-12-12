@@ -1,0 +1,46 @@
+package controllers
+
+import (
+	"fmt"
+	"github.com/fatih/color"
+	"github.com/google/uuid"
+	"github.com/labstack/echo/v4"
+	. "schrader/server/pkg/websocket"
+)
+
+var (
+	p        interface{}
+	receiver = make(chan string)
+	sender   = make(chan string)
+
+	// Colors
+	green  = color.Green
+	red    = color.Red
+	blue   = color.Blue
+	yellow = color.Yellow
+	bold   = color.New(color.Bold).SprintFunc()
+)
+
+func Run(pool *Pool) func(c echo.Context) error {
+	return func(c echo.Context) error {
+		p = pool
+		ws, err := Upgrade(c.Response(), c.Request())
+		if err != nil {
+			red(bold("Error: " + err.Error()))
+		}
+
+		defer ws.Close()
+		green(bold("\nclient connected to server, ID: " + ws.RemoteAddr().String()))
+
+		// Create a new client and add it to the pool
+		id := uuid.New().String()
+		client := NewClient(ws, pool, id)
+		client.ID = id
+		pool.Register <- client
+		fmt.Printf("client %s registered to pool", client.ID)
+		client.Read()
+
+		return nil
+
+	}
+}

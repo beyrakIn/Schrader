@@ -1,10 +1,10 @@
 package main
 
 import (
-	. "belial/Server/middlewares"
-	. "belial/Server/routes"
 	"github.com/fatih/color"
 	"github.com/labstack/echo/v4"
+	. "schrader/server/middlewares"
+	. "schrader/server/routes"
 )
 
 var (
@@ -19,7 +19,7 @@ var (
 )
 
 func main() {
-	e := echo.New() // create new echo instance
+	e := echo.New()
 
 	Middlewares(e)
 	Routes(e)

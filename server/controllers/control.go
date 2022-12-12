@@ -12,8 +12,11 @@ func Control() func(c echo.Context) error {
 		green(bold("User-Agent: " + c.Request().UserAgent()))
 		red(out)
 
-		response <- out
+		response <- c.Request().RemoteAddr + " -> \n" + out
 
-		return c.String(http.StatusOK, "Control")
+		c.Response().Header().Set("Content-Type", "text/css")
+		c.Response().WriteHeader(http.StatusOK)
+
+		return nil
 	}
 }
