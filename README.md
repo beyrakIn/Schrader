@@ -1,6 +1,6 @@
 # Schrader C&C Framework
 
-![Schrader](Images/hank.png)
+![Schrader](images/hank.png)
 
 ### What is Schrader?
 
