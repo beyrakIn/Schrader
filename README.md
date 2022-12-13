@@ -4,8 +4,8 @@
 
 ### What is Schrader?
 
-Schrader is a command&control server for the Schrader botnet. It is written in Go and C#. It is designed to be easy to
-use and easy to deploy.
+Schrader is a command&control server. It is written in Go and C# (Agent). It is designed to be easy to
+use and easy to distribute.
 
 ### Server
 
@@ -39,7 +39,15 @@ use and easy to deploy.
   client.
 - You can also see all logs and victim information on terminal screen.
 
-### Acknowledgements
+### Known Issues
+- [ ] When you send a command which is they don't return anything to stdout, the client will be suspended.
 
-> This interface is not executes command on the victim machine. It is just sends a command to the server then server
-> sends the command to the victim machine.
+### TODO
+
+- [ ] Develop a terminal interface for the management
+- [ ] Add authentication to the web interface
+- [ ] Add logging for actions and errors
+- [ ] Develop web interface for the client
+  - Design the web interface
+  - Show more information about the victim
+  - Develop command execution function

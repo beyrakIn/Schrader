@@ -9,7 +9,6 @@ import (
 )
 
 var (
-	p        interface{}
 	receiver = make(chan string)
 	sender   = make(chan string)
 
@@ -23,7 +22,11 @@ var (
 
 func Run(pool *Pool) func(c echo.Context) error {
 	return func(c echo.Context) error {
-		p = pool
+		// check if request is from a websocket or not. If not, redirect request to /client.
+		if c.Request().Header.Get("Upgrade") != "websocket" {
+			return c.Redirect(302, "/client")
+		}
+
 		ws, err := Upgrade(c.Response(), c.Request())
 		if err != nil {
 			red(bold("Error: " + err.Error()))
@@ -32,7 +35,7 @@ func Run(pool *Pool) func(c echo.Context) error {
 		defer ws.Close()
 		green(bold("\nclient connected to server, ID: " + ws.RemoteAddr().String()))
 
-		// Create a new client and add it to the pool
+		// new client created and added to the pool
 		id := uuid.New().String()
 		client := NewClient(ws, pool, id)
 		client.ID = id
@@ -41,6 +44,5 @@ func Run(pool *Pool) func(c echo.Context) error {
 		client.Read()
 
 		return nil
-
 	}
 }
