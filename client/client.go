@@ -39,15 +39,6 @@ func main() {
 	}
 	defer conn.Close()
 
-	//// create channel for messages
-	//go func() {
-	//	commands := []string{"Here we go!"}
-	//	for _, command := range commands {
-	//		send <- command
-	//		time.Sleep(2 * time.Second)
-	//	}
-	//}()
-
 	go receiveMessage(conn)
 
 	for {
@@ -101,16 +92,6 @@ func execute(command string) string {
 
 	//fmt.Println("Command Successfully Executed")
 	return string(out[:])
-}
-
-// function interrupt connection
-func interrupt(conn *websocket.Conn) error {
-	log.Println("interrupt")
-	err := conn.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, ""))
-	if err != nil {
-		return err
-	}
-	return nil
 }
 
 // function send get request with string data

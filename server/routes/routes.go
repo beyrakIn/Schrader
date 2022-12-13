@@ -17,6 +17,6 @@ func Routes(e *echo.Echo) {
 	e.GET("/broadcast", Broadcast(pool))
 	e.GET("/control", Control())
 	e.GET("/client", ClientsStatus(pool))
-	e.GET("client/:id", Command(pool))
+	e.GET("/client/:id", Command(pool))
 
 }
