@@ -17,7 +17,7 @@ use and easy to distribute.
 
 ### Client
 
-- [x] Client written in C# and Go
+- [x] Client written in C# and Go // C# client will add to repository as soos as possible :)
 - [x] Client can be compiled for Windows, Linux, and Mac
 - [x] Remote shell support
 - [x] File upload and download support
