@@ -1,6 +1,9 @@
 package websocket
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/gorilla/websocket"
+)
 
 type Pool struct {
 	Register   chan *Client
@@ -23,21 +26,17 @@ func (pool *Pool) Start() {
 		select {
 		case client := <-pool.Register:
 			pool.Clients[client] = true
-			fmt.Println("\nSize of Connection Pool: ", len(pool.Clients))
-			fmt.Printf("client %s joined", client.ID)
+			fmt.Printf("client %s joined \nSize of Connection Pool: %d\n", client.ID, len(pool.Clients))
 			break
 		case client := <-pool.Unregister:
 			delete(pool.Clients, client)
-			fmt.Println("\nSize of Connection Pool: ", len(pool.Clients))
-			fmt.Printf("client %s left", client.ID)
+			fmt.Println()
+			fmt.Printf("client %s joined \nSize of Connection Pool: %d\n", client.ID, len(pool.Clients))
 			break
 		case message := <-pool.Broadcast:
 			fmt.Println("Sending message to all clients in Pool")
 			for client, _ := range pool.Clients {
-				if err := client.Conn.WriteJSON(message); err != nil {
-					fmt.Println(err)
-					return
-				}
+				client.Write(websocket.TextMessage, []byte(message))
 			}
 		}
 	}
