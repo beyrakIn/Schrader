@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"github.com/fatih/color"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
@@ -38,9 +37,7 @@ func Run(pool *Pool) func(c echo.Context) error {
 		// new client created and added to the pool
 		id := uuid.New().String()
 		client := NewClient(ws, pool, id)
-		client.ID = id
 		pool.Register <- client
-		fmt.Printf("client %s registered to pool", client.ID)
 		client.Read()
 
 		return nil
